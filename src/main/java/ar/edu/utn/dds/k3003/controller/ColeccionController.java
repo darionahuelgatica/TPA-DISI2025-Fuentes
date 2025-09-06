@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/colecciones")
 public class ColeccionController {
 
     private final FachadaFuente fachada;
@@ -23,17 +24,17 @@ public class ColeccionController {
         this.hechos = hechos;
     }
 
-    @GetMapping("/colecciones")
+    @GetMapping
     public ResponseEntity<List<ColeccionDTO>> listar() {
         return ResponseEntity.ok(fachada.colecciones());
     }
 
-    @GetMapping("/colecciones/{nombre}")
+    @GetMapping("/{nombre}")
     public ResponseEntity<ColeccionDTO> porNombre(@PathVariable String nombre) {
         return ResponseEntity.ok(fachada.buscarColeccionXId(nombre));
     }
 
-    @PostMapping("/colecciones")
+    @PostMapping
     public ResponseEntity<ColeccionDTO> crear(@RequestBody ColeccionDTO dto) {
         try {
             return ResponseEntity.ok(fachada.agregar(dto));
@@ -42,7 +43,7 @@ public class ColeccionController {
         }
     }
 
-    @GetMapping("/colecciones/{nombre}/hechos")
+    @GetMapping("/{nombre}/hechos")
     public ResponseEntity<List<HechoDTO>> listarPorColeccion(@PathVariable String nombre) {
         List<HechoDTO> lista = hechos.findByColeccionId(nombre).stream()
                 .filter(h -> !h.estaBorrado())
@@ -54,5 +55,4 @@ public class ColeccionController {
                 .toList();
         return ResponseEntity.ok(lista);
     }
-
 }

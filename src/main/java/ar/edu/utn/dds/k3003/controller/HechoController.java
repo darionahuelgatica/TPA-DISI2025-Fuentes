@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/hechos")
 public class HechoController {
 
     private final FachadaFuente fachada;
@@ -18,19 +19,19 @@ public class HechoController {
         this.hechos = hechos;
     }
 
-    @PostMapping("/hechos")
+    @PostMapping
     public ResponseEntity<HechoDTO> crear(@RequestBody HechoDTO body) {
         HechoDTO creado = fachada.agregar(body);
         return ResponseEntity.ok(creado);
     }
 
-    @GetMapping("/hechos/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<HechoDTO> obtener(@PathVariable String id) {
         HechoDTO dto = fachada.buscarHechoXId(id);
         return ResponseEntity.ok(dto);
     }
 
-    @PatchMapping("/hechos/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<HechoDTO> patch(@PathVariable String id, @RequestBody PatchHechoEstadoRequest body) {
         Hecho h = hechos.findById(id).orElseThrow();
         if (body.estado() != null && !body.estado().isBlank()) { //por si es "borrado"
