@@ -22,6 +22,7 @@ public class Hecho {
 
     private String descripcion;
 
+    @Column(nullable = false)
     private LocalDateTime fecha;
 
     private boolean censurado;

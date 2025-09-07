@@ -29,12 +29,13 @@ public class Fachada implements FachadaFuente {
   private JpaHechoRepository hechos;
   private ObjectMapper mapper;
   private FachadaProcesadorPdI procesadorPdI;
+
+
  @Autowired // así spring usa este constructor y no el vacío del Evaluador
-  public Fachada(JpaColeccionRepository colecciones, JpaHechoRepository hechos) {
+  public Fachada(JpaColeccionRepository colecciones, JpaHechoRepository hechos, FachadaProcesadorPdI procesadorPdI) {
     this.colecciones = colecciones;
     this.hechos = hechos;
-    this.mapper = new ObjectMapper();
-    this.procesadorPdI = new ProcesadorPDIProxy(mapper);
+    this.procesadorPdI = procesadorPdI;
 
   }
 

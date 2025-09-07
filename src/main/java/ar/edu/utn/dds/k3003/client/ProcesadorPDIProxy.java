@@ -8,11 +8,13 @@ import io.javalin.http.HttpStatus;
 import java.util.*;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 @Primary
+@Component
 public class ProcesadorPDIProxy implements FachadaProcesadorPdI {
 
     private final String endpoint;

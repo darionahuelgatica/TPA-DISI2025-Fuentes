@@ -2,6 +2,7 @@ package ar.edu.utn.dds.k3003.controller;
 
 import ar.edu.utn.dds.k3003.facades.FachadaFuente;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
+import ar.edu.utn.dds.k3003.facades.dtos.PdIDTO;
 import ar.edu.utn.dds.k3003.model.Hecho;
 import ar.edu.utn.dds.k3003.repository.JpaHechoRepository;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,13 @@ public class HechoController {
     public ResponseEntity<HechoDTO> obtener(@PathVariable String id) {
         HechoDTO dto = fachada.buscarHechoXId(id);
         return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/{id}/pdi")
+    public ResponseEntity<PdIDTO> agregarPDI(@PathVariable String id, @RequestBody PdIDTO body) {
+        //body.hechoId=id;
+        PdIDTO creado = fachada.agregar(body);
+        return ResponseEntity.ok(creado);
     }
 
     @PatchMapping("/{id}")

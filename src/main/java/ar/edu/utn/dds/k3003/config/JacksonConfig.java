@@ -29,10 +29,4 @@ public class JacksonConfig {
 
         };
     }
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
-        return mapper;
-    }
 }
