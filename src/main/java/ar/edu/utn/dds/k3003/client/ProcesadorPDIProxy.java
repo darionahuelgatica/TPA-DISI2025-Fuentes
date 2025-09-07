@@ -7,10 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.HttpStatus;
 import java.util.*;
 import lombok.SneakyThrows;
+import org.springframework.context.annotation.Primary;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+@Primary
 public class ProcesadorPDIProxy implements FachadaProcesadorPdI {
 
     private final String endpoint;
@@ -19,7 +21,7 @@ public class ProcesadorPDIProxy implements FachadaProcesadorPdI {
     public ProcesadorPDIProxy(ObjectMapper objectMapper) {
 
         var env = System.getenv();
-        this.endpoint = env.getOrDefault("https://modulo-procesador-pdi.onrender.com", "http://localhost:8081/");
+        this.endpoint = "https://modulo-procesador-pdi.onrender.com/";
 
         var retrofit =
                 new Retrofit.Builder()

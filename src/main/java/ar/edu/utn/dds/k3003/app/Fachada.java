@@ -1,5 +1,6 @@
 package ar.edu.utn.dds.k3003.app;
 
+import ar.edu.utn.dds.k3003.client.ProcesadorPDIProxy;
 import ar.edu.utn.dds.k3003.facades.FachadaFuente;
 import ar.edu.utn.dds.k3003.facades.FachadaProcesadorPdI;
 import ar.edu.utn.dds.k3003.facades.dtos.ColeccionDTO;
@@ -9,6 +10,7 @@ import ar.edu.utn.dds.k3003.model.Coleccion;
 import ar.edu.utn.dds.k3003.model.Hecho;
 import ar.edu.utn.dds.k3003.model.PdI;
 import ar.edu.utn.dds.k3003.repository.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -25,11 +27,15 @@ import java.util.stream.Collectors;
 public class Fachada implements FachadaFuente {
   private JpaColeccionRepository colecciones;
   private JpaHechoRepository hechos;
+  private ObjectMapper mapper;
   private FachadaProcesadorPdI procesadorPdI;
  @Autowired // así spring usa este constructor y no el vacío del Evaluador
   public Fachada(JpaColeccionRepository colecciones, JpaHechoRepository hechos) {
     this.colecciones = colecciones;
     this.hechos = hechos;
+    this.mapper = new ObjectMapper();
+    this.procesadorPdI = new ProcesadorPDIProxy(mapper);
+
   }
 
   //Para que los tests puedan usar constructor vacío y no se cacheen entre sí
