@@ -25,7 +25,7 @@ public class JacksonConfig {
             builder.serializers(new LocalDateTimeSerializer(ISO));
             builder.deserializers(new LocalDateTimeDeserializer(ISO));
             builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            builder.propertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
+            builder.propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
         };
     }
