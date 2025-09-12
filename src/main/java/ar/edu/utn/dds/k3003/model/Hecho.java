@@ -7,20 +7,21 @@ import java.util.List;
 
 import ar.edu.utn.dds.k3003.facades.dtos.CategoriaHechoEnum;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
 
 @Entity
+@Data
+@Getter
 @Table(name = "hechos")
 public class Hecho {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(name = "coleccion_id", nullable = false)
     private String coleccionId;
 
     private String titulo;
-
-    private String descripcion;
 
     @Column(nullable = false)
     private LocalDateTime fecha;
@@ -29,9 +30,6 @@ public class Hecho {
 
     @Transient
     private final List<PdI> pdis;
-
-    @Column(nullable = false)
-    private String estado = "activo"; //para PATCH, y es interno
 
     //Agrego viendo clase HechoDTO
     @ElementCollection
@@ -46,12 +44,10 @@ public class Hecho {
 
     private String origen;
 
-    public boolean estaBorrado() { return "borrado".equalsIgnoreCase(estado); }
-
     public Hecho() {
         this.pdis = new ArrayList<>();
     }
-    public Hecho(String id, String coleccionId, String titulo, String descripcion) {
+    public Hecho(String id, String coleccionId, String titulo) {
         if (coleccionId == null || coleccionId.isBlank()) {
             throw new IllegalArgumentException("Un Hecho debe tener una colección asociada.");
         }
@@ -61,7 +57,6 @@ public class Hecho {
         this.id = id;
         this.coleccionId = coleccionId;
         this.titulo = titulo;
-        this.descripcion = descripcion;
         this.fecha = LocalDateTime.now();
         this.censurado = false;
         this.pdis = new ArrayList<>();
@@ -101,10 +96,6 @@ public class Hecho {
         return titulo;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
     public LocalDateTime getFecha() {
         return fecha;
     }
@@ -129,16 +120,8 @@ public class Hecho {
         return etiquetas;
     }
 
-    public String getEstado() {
-        return estado;
-    }
-
     public void setCensurado(boolean censurado) {
         this.censurado = censurado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 
     public void setEtiquetas(List<String> etiquetas) {
@@ -167,10 +150,6 @@ public class Hecho {
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 
     public void setFecha(LocalDateTime fecha) {

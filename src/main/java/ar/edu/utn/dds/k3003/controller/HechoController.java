@@ -1,10 +1,13 @@
 package ar.edu.utn.dds.k3003.controller;
 
+import ar.edu.utn.dds.k3003.app.FachadaFuenteExtended;
 import ar.edu.utn.dds.k3003.facades.FachadaFuente;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
 import ar.edu.utn.dds.k3003.facades.dtos.PdIDTO;
 import ar.edu.utn.dds.k3003.model.Hecho;
 import ar.edu.utn.dds.k3003.repository.JpaHechoRepository;
+import com.zaxxer.hikari.metrics.IMetricsTracker;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,27 +15,26 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/hechos")
 public class HechoController {
 
-    private final FachadaFuente fachada;
+    private final FachadaFuenteExtended fachada;
     private final JpaHechoRepository hechos;
+    private final MeterRegistry meterRegistry;
 
-    public HechoController(FachadaFuente fachada, JpaHechoRepository hechos) {
+    public HechoController(FachadaFuenteExtended fachada, JpaHechoRepository hechos, MeterRegistry meterRegistry) {
         this.fachada = fachada;
         this.hechos = hechos;
+        this.meterRegistry = meterRegistry;
     }
 
     @PostMapping
     public ResponseEntity<HechoDTO> crear(@RequestBody HechoDTO body) {
         HechoDTO creado = fachada.agregar(body);
+        this.meterRegistry.counter("Fuentes.hecho.crear").increment();
         return ResponseEntity.ok(creado);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<HechoDTO> obtener(@PathVariable String id) {
         Hecho h = hechos.findById(id).orElseThrow();
-
-        if ("borrado".equalsIgnoreCase(h.getEstado())) {
-            return ResponseEntity.notFound().build(); // no lo mostramos si está borrado
-        }
 
         HechoDTO dto = new HechoDTO(
                 h.getId(),
@@ -44,22 +46,20 @@ public class HechoController {
                 h.getFecha(),
                 h.getOrigen()
         );
-
+        this.meterRegistry.counter("Fuentes.hecho.hechoPorId").increment();
         return ResponseEntity.ok(dto);
     }
 
     @PostMapping("/{id}/pdi")
     public ResponseEntity<PdIDTO> agregarPDI(@PathVariable String id, @RequestBody PdIDTO body) {
         PdIDTO creado = fachada.agregar(body);
+        this.meterRegistry.counter("Fuentes.hechos.crearPdi").increment();
         return ResponseEntity.ok(creado);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<HechoDTO> patch(@PathVariable String id, @RequestBody PatchHechoEstadoRequest body) {
         Hecho h = hechos.findById(id).orElseThrow();
-        if (body.estado() != null && !body.estado().isBlank()) {
-            h.setEstado(body.estado());
-        }
         Hecho saved = hechos.save(h);
         HechoDTO dto = new HechoDTO(
                 saved.getId(),
@@ -71,25 +71,21 @@ public class HechoController {
                 saved.getFecha(),
                 saved.getOrigen()
         );
+        this.meterRegistry.counter("Fuentes.hechos.modificarHecho").increment();
         return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable String id) {
-        Hecho h = hechos.findById(id).orElseThrow();
-        h.setEstado("borrado"); // borrado lógico
-        hechos.save(h);
-
+        fachada.borrarHecho(id);
+        this.meterRegistry.counter("Fuentes.hechos.borrarHecho").increment();
         return ResponseEntity.noContent().build(); // no devolvemos el registro
     }
 
     @DeleteMapping
     public ResponseEntity<Void> eliminarTodos() {
-        var lista = hechos.findAll();
-
-        lista.forEach(h -> h.setEstado("borrado")); // marcamos todos como borrados
-        hechos.saveAll(lista);
-
+        fachada.borrarTodosLosHechos();
+        this.meterRegistry.counter("Fuentes.hechos.BorrarTodosLosHechos").increment();
         return ResponseEntity.noContent().build(); // no devolvemos nada
     }
 
