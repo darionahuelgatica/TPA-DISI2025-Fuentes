@@ -54,6 +54,7 @@ public class ColeccionController {
     @GetMapping("/{nombre}/hechos")
     public ResponseEntity<List<HechoDTO>> listarPorColeccion(@PathVariable String nombre) {
         List<HechoDTO> lista = hechos.findByColeccionId(nombre).stream()
+                .filter(h -> !h.isCensurado())
                 .map(h -> new HechoDTO(
                         h.getId(), h.getColeccionId(), h.getTitulo(),
                         h.getEtiquetas(), h.getCategoria(), h.getUbicacion(),

@@ -36,6 +36,10 @@ public class HechoController {
     public ResponseEntity<HechoDTO> obtener(@PathVariable String id) {
         Hecho h = hechos.findById(id).orElseThrow();
 
+        if(h.isCensurado()) {
+            return ResponseEntity.notFound().build();
+        }
+
         HechoDTO dto = new HechoDTO(
                 h.getId(),
                 h.getColeccionId(),
@@ -58,21 +62,22 @@ public class HechoController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<HechoDTO> patch(@PathVariable String id, @RequestBody PatchHechoEstadoRequest body) {
+    public ResponseEntity<Void> patch(@PathVariable String id, @RequestBody PatchHechoEstadoRequest body) {
+
         Hecho h = hechos.findById(id).orElseThrow();
-        Hecho saved = hechos.save(h);
-        HechoDTO dto = new HechoDTO(
-                saved.getId(),
-                saved.getColeccionId(),
-                saved.getTitulo(),
-                saved.getEtiquetas(),
-                saved.getCategoria(),
-                saved.getUbicacion(),
-                saved.getFecha(),
-                saved.getOrigen()
-        );
+
+        if(body.estado().equals("borrado")) {
+            this.fachada.censurarHecho(id);
+        }
+        else if(body.estado().equals("activo")) {
+            this.fachada.desCensurarHecho(id);
+        }
+        else {
+            return ResponseEntity.badRequest().build();
+        }
+
         this.meterRegistry.counter("Fuentes.hechos.modificarHecho").increment();
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

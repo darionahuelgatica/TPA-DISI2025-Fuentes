@@ -176,6 +176,13 @@ public class Fachada implements FachadaFuenteExtended {
         hechos.save(h);
     }
 
+    public void desCensurarHecho(String hechoId) throws NoSuchElementException {
+        Hecho h = hechos.findById(hechoId)
+                .orElseThrow(() -> new NoSuchElementException("No existe el hecho con ID: " + hechoId));
+        h.setCensurado(false);
+        hechos.save(h);
+    }
+
     // --------------------
     // PDI
     // --------------------
