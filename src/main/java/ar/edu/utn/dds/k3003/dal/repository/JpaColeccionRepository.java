@@ -1,7 +1,6 @@
-package ar.edu.utn.dds.k3003.repository;
+package ar.edu.utn.dds.k3003.dal.repository;
 
-import ar.edu.utn.dds.k3003.model.Coleccion;
-import org.springframework.context.annotation.Profile;
+import ar.edu.utn.dds.k3003.dal.model.Coleccion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

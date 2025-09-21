@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(InvalidParameterException.class)
+    @ExceptionHandler({InvalidParameterException.class, IllegalArgumentException.class})
     public ResponseEntity<Map<String, String>> handleInvalidParameterException(InvalidParameterException e) {
         Map<String, String> response = new HashMap<>();
         response.put("error", "Bad Request");

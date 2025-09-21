@@ -1,10 +1,10 @@
-package ar.edu.utn.dds.k3003.client;
+package ar.edu.utn.dds.k3003.dal.client;
 
 import ar.edu.utn.dds.k3003.facades.FachadaProcesadorPdI;
 import ar.edu.utn.dds.k3003.facades.FachadaSolicitudes;
 import ar.edu.utn.dds.k3003.facades.dtos.PdIDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.javalin.http.HttpStatus;
+
 import java.util.*;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Primary;

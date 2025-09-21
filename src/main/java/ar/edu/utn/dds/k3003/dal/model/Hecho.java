@@ -1,4 +1,4 @@
-package ar.edu.utn.dds.k3003.model;
+package ar.edu.utn.dds.k3003.dal.model;
 
 
 import java.time.LocalDateTime;

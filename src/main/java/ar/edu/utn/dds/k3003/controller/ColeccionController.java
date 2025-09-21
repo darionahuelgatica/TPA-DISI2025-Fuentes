@@ -1,9 +1,9 @@
 package ar.edu.utn.dds.k3003.controller;
 
-import ar.edu.utn.dds.k3003.app.FachadaFuenteExtended;
+import ar.edu.utn.dds.k3003.bll.IColeccionService;
+import ar.edu.utn.dds.k3003.bll.IHechoService;
 import ar.edu.utn.dds.k3003.facades.dtos.ColeccionDTO;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
-import ar.edu.utn.dds.k3003.repository.JpaHechoRepository;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,72 +15,60 @@ import java.util.List;
 @RequestMapping("/api/colecciones")
 public class ColeccionController {
 
-    private final FachadaFuenteExtended fachada;
-    private final JpaHechoRepository hechos;
+    private final IColeccionService coleccionService;
+    private final IHechoService hechoService;
     private final MeterRegistry meterRegistry;
 
     @Autowired
-    public ColeccionController(FachadaFuenteExtended fachada,
-                               JpaHechoRepository hechos,
-                               MeterRegistry meterRegistry) {
-        this.fachada = fachada;
-        this.hechos = hechos;
+    public ColeccionController(
+            IColeccionService coleccionService,
+            IHechoService hechoService,
+            MeterRegistry meterRegistry) {
+        this.coleccionService = coleccionService;
+        this.hechoService = hechoService;
         this.meterRegistry = meterRegistry;
     }
 
     @GetMapping
     public ResponseEntity<List<ColeccionDTO>> listar() {
         this.meterRegistry.counter("Fuentes.colecciones.listarColecciones").increment();
-        return ResponseEntity.ok(fachada.colecciones());
+        return ResponseEntity.ok(coleccionService.getColecciones());
     }
 
     @GetMapping("/{nombre}")
-    public ResponseEntity<ColeccionDTO> porNombre(@PathVariable String nombre) {
+    public ResponseEntity<ColeccionDTO> getByNombre(@PathVariable String nombre) {
         this.meterRegistry.counter("Fuentes.colecciones.mostrarUnaColeccion").increment();
-        return ResponseEntity.ok(fachada.buscarColeccionXId(nombre));
+        return ResponseEntity.ok(coleccionService.getColeccionById(nombre));
     }
 
     @PostMapping
     public ResponseEntity<ColeccionDTO> crear(@RequestBody ColeccionDTO dto) {
         try {
             this.meterRegistry.counter("Fuentes.colecciones.crearColeccion").increment();
-            return ResponseEntity.ok(fachada.agregar(dto));
+            return ResponseEntity.ok(coleccionService.addColeccion(dto));
         } catch (IllegalArgumentException e) {
             this.meterRegistry.counter("Fuentes.colecciones.error").increment();
-            return ResponseEntity.status(409).build(); // conflicto si ya existe
+            return ResponseEntity.status(409).build();
         }
     }
 
     @GetMapping("/{nombre}/hechos")
     public ResponseEntity<List<HechoDTO>> listarPorColeccion(@PathVariable String nombre) {
-        List<HechoDTO> lista = hechos.findByColeccionId(nombre).stream()
-                .filter(h -> !h.isCensurado())
-                .map(h -> new HechoDTO(
-                        h.getId(), h.getColeccionId(), h.getTitulo(),
-                        h.getEtiquetas(), h.getCategoria(), h.getUbicacion(),
-                        h.getFecha(), h.getOrigen()
-                ))
-                .toList();
+        List<HechoDTO> lista = hechoService.getHechosByColeccion(nombre);
         this.meterRegistry.counter("Fuentes.colecciones.listarHechosPorColeccion").increment();
         return ResponseEntity.ok(lista);
     }
 
-    // 🔹 DELETE físico de UNA colección
     @DeleteMapping("/{nombre}")
     public ResponseEntity<Void> eliminar(@PathVariable String nombre) {
-        ColeccionDTO coleccion = fachada.buscarColeccionXId(nombre);
-        if (coleccion == null) {
-            return ResponseEntity.notFound().build();
-        }
-        fachada.borrarColeccion(nombre); // ahora hace borrado físico
+        coleccionService.deleteColeccion(nombre);
         this.meterRegistry.counter("Fuentes.colecciones.BorrarColeccionPorID").increment();
         return ResponseEntity.noContent().build();
     }
 
-    // 🔹 DELETE físico de TODAS las colecciones
     @DeleteMapping
     public ResponseEntity<Void> eliminarTodas() {
-        fachada.borrarTodasLasColecciones(); // ahora hace borrado físico
+        coleccionService.deleteAllColecciones();
         this.meterRegistry.counter("Fuentes.colecciones.BorrarTodasLasColecciones").increment();
         return ResponseEntity.noContent().build();
     }

@@ -1,6 +1,6 @@
-package ar.edu.utn.dds.k3003.repository;
+package ar.edu.utn.dds.k3003.dal.repository;
 
-import ar.edu.utn.dds.k3003.model.Hecho;
+import ar.edu.utn.dds.k3003.dal.model.Hecho;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ public class InMemoryHechoRepo implements HechoRepository {
     private final Map<String, Hecho> data = new HashMap<>();
     private final AtomicLong seq = new AtomicLong(0);
 
-    //@Override
+    @Override
     public Optional<Hecho> findById(String id) { return Optional.ofNullable(data.get(id)); }
 
     @Override
@@ -22,9 +22,15 @@ public class InMemoryHechoRepo implements HechoRepository {
         return data.values().stream().filter(h -> Objects.equals(h.getColeccionId(), coleccionId)).toList();
     }
 
-    //@Override
+    @Override
     public Hecho save(Hecho h) {
         data.put(h.getId(), h);
         return h;
     }
+
+    @Override
+    public void deleteById(String id) { data.remove(id); }
+
+    @Override
+    public void deleteAll() { data.clear(); }
 }
