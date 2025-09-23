@@ -4,6 +4,7 @@ import ar.edu.utn.dds.k3003.bll.IHechoService;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
 import ar.edu.utn.dds.k3003.facades.dtos.PdIDTO;
 import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ public class HechoController {
     private final IHechoService hechoService;
     private final MeterRegistry meterRegistry;
 
+    @Autowired
     public HechoController(IHechoService hechoService, MeterRegistry meterRegistry) {
         this.hechoService = hechoService;
         this.meterRegistry = meterRegistry;

@@ -1,11 +1,13 @@
 package ar.edu.utn.dds.k3003.dal.repository;
 
 import ar.edu.utn.dds.k3003.dal.model.Coleccion;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@Repository
 public interface ColeccionRepository {
     Coleccion save(Coleccion c);
     Optional<Coleccion> findById(String coleccionId);

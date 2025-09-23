@@ -1,6 +1,7 @@
-package ar.edu.utn.dds.k3003.dal.repository;
+package ar.edu.utn.dds.k3003.dal.repository.InMemory;
 
 import ar.edu.utn.dds.k3003.dal.model.Coleccion;
+import ar.edu.utn.dds.k3003.dal.repository.ColeccionRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
