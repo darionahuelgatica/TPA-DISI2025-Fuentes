@@ -55,7 +55,7 @@ public class HechoController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> patch(@PathVariable String id, @RequestBody PatchHechoEstadoRequest body) {
+    public ResponseEntity<HechoDTO> patch(@PathVariable String id, @RequestBody PatchHechoEstadoRequest body) {
         HechoDTO hecho = hechoService.getHechoById(id);
 
         if(body.estado().equals("borrado")){
@@ -70,7 +70,7 @@ public class HechoController {
             return ResponseEntity.badRequest().build();
 
         this.meterRegistry.counter("Fuentes.hechos.modificarHecho").increment();
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(hecho);
     }
 
     @DeleteMapping("/{id}")
