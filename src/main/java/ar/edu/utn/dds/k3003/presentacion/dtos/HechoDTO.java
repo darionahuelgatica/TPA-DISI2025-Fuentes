@@ -1,25 +1,17 @@
 package ar.edu.utn.dds.k3003.presentacion.dtos;
 
 import ar.edu.utn.dds.k3003.business.enums.CategoriaHechoEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class HechoDTO {
-    public HechoDTO(String id, String nombreColeccion, String titulo, List<String> etiquetas,
-           CategoriaHechoEnum categoria, String ubicacion, LocalDateTime fecha, String origen) {
-        this.id = id;
-        this.nombreColeccion = nombreColeccion;
-        this.titulo = titulo;
-        this.etiquetas = etiquetas;
-        this.categoria = categoria;
-        this.ubicacion = ubicacion;
-        this.fecha = fecha;
-        this.origen = origen;
-    }
-
     public HechoDTO(String id,String nombreColeccion, String titulo) {
         this(id, nombreColeccion, titulo, null, null, null, null, null);
     }
