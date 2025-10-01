@@ -1,4 +1,4 @@
-package ar.edu.utn.dds.k3003.presentacion.config;
+package ar.edu.utn.dds.k3003.presentacion.apiRest.config;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;

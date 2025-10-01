@@ -1,4 +1,4 @@
-package ar.edu.utn.dds.k3003.presentacion.controller;
+package ar.edu.utn.dds.k3003.presentacion.apiRest.controller;
 
 import ar.edu.utn.dds.k3003.business.services.IColeccionService;
 import ar.edu.utn.dds.k3003.business.services.IHechoService;
