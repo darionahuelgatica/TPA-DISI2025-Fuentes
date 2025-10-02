@@ -80,19 +80,6 @@
       <optional>true</optional>
     </dependency>
 
-    <dependency>
-      <groupId>com.github.ezequieljsosa</groupId>
-      <artifactId>dds-eval-tp2025</artifactId>
-      <version>0.0.7</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-simple</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-
     <!-- Spring Boot Test -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -126,7 +113,12 @@
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
+      <artifactId>spring-boot-starter-amqp</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
     </dependency>
 
   </dependencies>
