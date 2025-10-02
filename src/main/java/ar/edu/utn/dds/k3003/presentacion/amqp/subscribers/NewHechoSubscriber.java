@@ -9,11 +9,11 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HechoSubscriber {
+public class NewHechoSubscriber {
 
     private final IHechoService hechoService;
 
-    public HechoSubscriber(IHechoService hechoService) {
+    public NewHechoSubscriber(IHechoService hechoService) {
         this.hechoService = hechoService;
     }
 
