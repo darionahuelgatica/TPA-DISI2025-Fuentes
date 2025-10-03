@@ -11,19 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PdIDTO {
-
-    public PdIDTO(String id, String hechoId) {
-        this(id, hechoId, null, null, null, null, null, List.of());
-    }
-
-    public PdIDTO(String id, String hechoId, String url) {
-        this(id, hechoId, url, null, null, null, null, List.of());
-    }
-
-    public PdIDTO(String id) {
-        this(id, null, null,null, null, null, null, List.of());
-    }
-
     private String id;
     private String hechoId;
     private String url;
