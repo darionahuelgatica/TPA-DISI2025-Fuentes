@@ -23,9 +23,9 @@ public class NewHechoSubscriber {
 
         try {
             this.hechoService.addHecho(hechoDTO);
-            channel.basicAck(tag, false);
+            //channel.basicAck(tag, false);
         } catch (Exception ex) {
-            channel.basicNack(tag, false, true);
+            //channel.basicNack(tag, false, true);
             throw ex;
         }
     }
