@@ -17,16 +17,8 @@ public class NewHechoSubscriber {
         this.hechoService = hechoService;
     }
 
-    @RabbitListener(queues = "${app.amqp.queue}")
+    @RabbitListener(queues = "#{newHechosQueuePerInstance.name}")
     public void onMessage(@Payload HechoDTO hechoDTO, Channel channel, Message message) throws Exception {
-        long tag = message.getMessageProperties().getDeliveryTag();
-
-        try {
-            this.hechoService.addHecho(hechoDTO);
-            channel.basicAck(tag, false);
-        } catch (Exception ex) {
-            channel.basicNack(tag, false, true);
-            throw ex;
-        }
+        this.hechoService.addHecho(hechoDTO);
     }
 }
