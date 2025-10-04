@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,5 +17,4 @@ public class PdIDTO {
     private String lugar;
     private LocalDateTime momento;
     private String contenido;
-    private List<String> etiquetas;
 }

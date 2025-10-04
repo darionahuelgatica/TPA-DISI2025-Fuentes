@@ -129,7 +129,6 @@ public class HechoService implements IHechoService {
             resultado.getId(),
             hechoId,
             resultado.getContenido(),
-            resultado.getEtiquetas(),
             true
         );
         hecho.agregarPdI(pdiModel);
