@@ -35,7 +35,7 @@ public class HechoService implements IHechoService {
     public HechoDTO addHecho(HechoDTO hechoDTO) {
         String coleccionId = hechoDTO.getNombreColeccion();
         if (coleccionRepository.findById(coleccionId).isEmpty())
-            throw new IllegalStateException("La colección no existe: " + coleccionId);
+            throw new NoSuchElementException("La colección no existe: " + coleccionId);
 
         Hecho guardado = hechoRepository.save(
             new Hecho(hechoDTO.getId(), hechoDTO.getNombreColeccion(), hechoDTO.getTitulo()));
