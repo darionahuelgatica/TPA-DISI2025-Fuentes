@@ -1,4 +1,4 @@
-package ar.edu.utn.dds.k3003.presentacion.amqp.subscribers;
+package ar.edu.utn.dds.k3003.amqp.subscribers;
 
 import ar.edu.utn.dds.k3003.business.services.IHechoService;
 import ar.edu.utn.dds.k3003.presentacion.dtos.HechoDTO;

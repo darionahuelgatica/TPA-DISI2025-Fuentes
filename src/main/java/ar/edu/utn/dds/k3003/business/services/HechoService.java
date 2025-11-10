@@ -1,5 +1,6 @@
 package ar.edu.utn.dds.k3003.business.services;
 
+import ar.edu.utn.dds.k3003.amqp.publishers.HechosUpdatesQueuePublisher;
 import ar.edu.utn.dds.k3003.dataaccess.client.IFachadaProcesadorPDI;
 import ar.edu.utn.dds.k3003.dataaccess.model.Hecho;
 import ar.edu.utn.dds.k3003.dataaccess.model.PdI;
@@ -20,15 +21,18 @@ public class HechoService implements IHechoService {
     private final HechoRepository hechoRepository;
     private final ColeccionRepository coleccionRepository;
     private final IFachadaProcesadorPDI procesadorPdI;
+    private final HechosUpdatesQueuePublisher updatesPublisher;
 
     @Autowired
     public HechoService(
             HechoRepository hechoRepository,
             ColeccionRepository coleccionRepository,
-            IFachadaProcesadorPDI procesadorPdI) {
+            IFachadaProcesadorPDI procesadorPdI,
+            HechosUpdatesQueuePublisher updatesPublisher) {
         this.hechoRepository = hechoRepository;
         this.coleccionRepository = coleccionRepository;
         this.procesadorPdI = procesadorPdI;
+        this.updatesPublisher = updatesPublisher;
     }
 
     @Override
@@ -39,6 +43,8 @@ public class HechoService implements IHechoService {
 
         Hecho guardado = hechoRepository.save(
             new Hecho(hechoDTO.getId(), hechoDTO.getNombreColeccion(), hechoDTO.getTitulo()));
+
+        this.updatesPublisher.publishUpsert(guardado);
 
         return new HechoDTO(
             guardado.getId(),
@@ -96,18 +102,20 @@ public class HechoService implements IHechoService {
 
     @Override
     public void censurarHecho(String hechoId) {
-        Hecho h = hechoRepository.findById(hechoId)
+        Hecho hecho = hechoRepository.findById(hechoId)
             .orElseThrow(() -> new NoSuchElementException("No existe el hecho con ID: " + hechoId));
-        h.censurar();
-        hechoRepository.save(h);
+        hecho.censurar();
+        hechoRepository.save(hecho);
+        this.updatesPublisher.publishDelete(hechoId);
     }
 
     @Override
     public void desCensurarHecho(String hechoId) {
-        Hecho h = hechoRepository.findById(hechoId)
+        Hecho hecho = hechoRepository.findById(hechoId)
             .orElseThrow(() -> new NoSuchElementException("No existe el hecho con ID: " + hechoId));
-        h.setCensurado(false);
-        hechoRepository.save(h);
+        hecho.setCensurado(false);
+        hechoRepository.save(hecho);
+        this.updatesPublisher.publishUpsert(hecho);
     }
 
     @Override
@@ -140,10 +148,12 @@ public class HechoService implements IHechoService {
     @Override
     public void borrarHecho(String id) {
         hechoRepository.deleteById(id);
+        this.updatesPublisher.publishDelete(id);
     }
 
     @Override
     public void borrarTodosLosHechos() {
         hechoRepository.deleteAll();
+        this.updatesPublisher.publishDeleteAll();
     }
 }

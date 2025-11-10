@@ -1,4 +1,4 @@
-package ar.edu.utn.dds.k3003.presentacion.amqp;
+package ar.edu.utn.dds.k3003.amqp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;

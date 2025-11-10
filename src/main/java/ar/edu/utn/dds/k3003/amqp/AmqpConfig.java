@@ -1,4 +1,4 @@
-package ar.edu.utn.dds.k3003.presentacion.amqp;
+package ar.edu.utn.dds.k3003.amqp;
 
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
