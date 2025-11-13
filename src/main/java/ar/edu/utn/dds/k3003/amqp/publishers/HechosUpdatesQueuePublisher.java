@@ -60,26 +60,3 @@ public class HechosUpdatesQueuePublisher {
         });
     }
 }
-
-
-//
-//@Component
-//public class HechosUpdatesQueuePublisher {
-//
-//    private final RabbitTemplate rabbitTemplate;
-//    private final String upsertedHechosQueue;
-//
-//    public HechosUpdatesQueuePublisher(
-//            RabbitTemplate rabbitTemplate,
-//            @Value("${app.hechos.updates.queue}") String queueName) {
-//        this.rabbitTemplate = rabbitTemplate;
-//        this.upsertedHechosQueue = queueName;
-//    }
-//
-//    public void publishUpsertToQueue(Hecho hecho) {
-//        String parsedMessage;
-//
-//
-//        rabbitTemplate.convertAndSend("", upsertedHechosQueue, parsedMessage);
-//    }
-//}
